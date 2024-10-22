@@ -1,7 +1,7 @@
 import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import TaskForm from './TaskForm'
@@ -26,12 +26,14 @@ export default function AddTaskModal() {
 
     const { register, reset, handleSubmit, formState: { errors } } = useForm({ defaultValues: initialValues })
 
+    const queryClient = useQueryClient()
     const { mutate } = useMutation({
         mutationFn: createTask, 
         onError: (error) => {
             toast.error(error.message)
         }, 
         onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ['project', projectId] })
             toast.success(data)
             reset()
             navigate(location.pathname, {replace: true})

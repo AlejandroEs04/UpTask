@@ -3,6 +3,8 @@ import { useQuery } from "@tanstack/react-query"
 import { getProjectById } from "@/api/ProjectApi"
 import AddTaskModal from "@/components/task/AddTaskModal"
 import TaskList from "@/components/task/TaskList"
+import EditTaskData from "@/components/task/EditTaskData"
+import TaskModalDetails from "@/components/task/TaskModalDetails"
 
 export default function ProjectDetailsView() {
     const params = useParams()
@@ -11,7 +13,7 @@ export default function ProjectDetailsView() {
     const navigate = useNavigate()
 
     const { data, isLoading, isError } = useQuery({
-        queryKey: ['editProject', projectId], 
+        queryKey: ['project', projectId], 
         queryFn: () => getProjectById(projectId), 
         retry: false
     })
@@ -38,6 +40,8 @@ export default function ProjectDetailsView() {
             />
 
             <AddTaskModal />
+            <EditTaskData />
+            <TaskModalDetails />
         </>
     )
 }
